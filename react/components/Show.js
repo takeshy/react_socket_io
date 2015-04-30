@@ -1,11 +1,14 @@
 import React from 'react';
 import Router from 'react-router'; 
+import BlogsStore from '../stores/Blogs';
 var Link = Router.Link;
-class Show extends React.Component {
-  mixins: [ Router.State ]
+var Show = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.func
+  },
   render(){
-    var blogId = this.getParams().blogId;
-    var blog = blogsStore.find(blogId);
+    var blogId = this.context.router.getCurrentParams().blogId;
+    var blog = BlogsStore.find(blogId);
     return (
       <div>
         <p>
@@ -20,5 +23,5 @@ class Show extends React.Component {
       </div>
     )
   }
-}
+});
 export default Show;

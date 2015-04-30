@@ -19,6 +19,15 @@ const Blogs = assign({}, EventEmitter.prototype, {
   },
   all(){
     return blogs.concat([])
+  },
+  find(id){
+    for(let i=0;i<blogs.length;i++){
+      let blog = blogs[i];
+      if(blog.id == id){
+        return blog;
+      }
+    }
+    return null;
   }
 });
 
@@ -56,6 +65,16 @@ Blogs.dispatchToken = AppDispatcher.register(action => {
           }
         }
       });
+      Blogs.emitChange();
+      break;
+    case ActionTypes.DESTROY_BLOG:
+      let nBlog = [];
+      blogs.forEach((blog)=>{
+        if(blog.id != action.post.id){
+          nBlog.push(blog);
+        }
+      });
+      blogs = nBlog;
       Blogs.emitChange();
       break;
   }

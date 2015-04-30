@@ -25,6 +25,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(require('express-method-override')());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 

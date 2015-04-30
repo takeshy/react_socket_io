@@ -1,20 +1,19 @@
 import React from 'react';
 import BlogsStore from '../stores/Blogs';
-import BlogsActionCreators from '../actions/BlogsActionCreators';
 import BlogHeader from './BlogHeader';
 class Blog extends React.Component {
   constructor(props) {
     super(props);
+    this.onChangeFunc = this._onChange.bind(this)
     this.state = {
-      blogs: []
+      blogs: BlogsStore.all()
     }
   }
   componentDidMount() {
-    BlogsStore.addChangeListener(this._onChange.bind(this));
-    BlogsActionCreators.initial(this.props.posts);
+    BlogsStore.addChangeListener(this.onChangeFunc);
   }
   componentWillUnmount() {
-    BlogsStore.removeChangeListener(this._onChange.bind(this));
+    BlogsStore.removeChangeListener(this.onChangeFunc);
   }
   _onChange() {
     this.setState({ blogs: BlogsStore.all()});

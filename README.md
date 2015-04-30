@@ -15,7 +15,7 @@ The below link is nice reference for backbone-reails.
 
 ```sh:command
 npm install
-browserify -d index.js -o public/bundle.js
+gulp modules
 redis-server
 node app.js
 ```

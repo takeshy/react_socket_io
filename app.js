@@ -4,21 +4,14 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
   , http = require('http')
   , path = require('path')
-  , post = require('./routes/post')
-  , redis = require("redis")
-  , redis = require("redis")
   , bodyParser = require('body-parser')
   , logger = require('morgan')
+  , Post = require('./models/post')
   , errorHandler = require('errorhandler');
 
 var app = express();
-var common = {}
-common.db = redis.createClient();
-common.publisher  = redis.createClient();
-common.subscriber = redis.createClient()
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
@@ -30,23 +23,41 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req,res){
-  routes.index(common,req,res);
+  Post.all(function(err,recs){
+    if (err) return next(err);
+    res.render('index',{initialData: JSON.stringify({posts: recs})});
+  });
 });
 
 app.route('/posts')
 .get(function(req,res){
-  post.index(common,req,res);
+  Post.all(function(err,obj){
+    if (err) return next(err);
+    res.send(obj)
+  });
 })
 .post(function(req,res){
-  post.create(common,req,res);
+  Post.create(req.body,function(err,obj){
+    if (err) return next(err);
+    res.send(obj)
+    postListener.emit("post", JSON.stringify([obj]));
+  });
 })
 
 app.route('/posts/:id')
 .put(function(req,res){
-  post.update(common,req,res);
+  Post.update(req.body,function(err,obj){
+    if (err) return next(err);
+    res.send(obj)
+    postListener.emit("post", JSON.stringify([obj]));
+  });
 })
 .delete(function(req,res){
-  post.destroy(common,req,res);
+  Post.destroy(req.params.id,function(err,obj){
+    if (err) return next(err);
+    res.send(obj)
+    postListener.emit("post", JSON.stringify([obj]));
+  });
 });
 
 var server = http.createServer(app)
@@ -58,7 +69,3 @@ server.listen(app.get('port'), function(){
 
 postListener = io.of("/posts").on('connection', function (socket) { });
 
-common.subscriber.subscribe("post");
-common.subscriber.on("message", function(channel, message) {
-  postListener.emit("post",message);
-});

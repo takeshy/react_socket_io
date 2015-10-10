@@ -1,15 +1,11 @@
 import React from 'react';
 import BlogsActionCreators from '../actions/BlogsActionCreators';
-import Router from 'react-router'; 
-var Link = Router.Link;
+import { Link } from 'react-router'
 var NewPost = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.func
-  },
   handleSubmit: function(e) {
     e.preventDefault();
     BlogsActionCreators.createBlog({title: document.getElementById("title").value,content: document.getElementById("content").value},()=>{
-      this.context.router.transitionTo('/');
+      this.props.history.pushState(null, '/', null);
     });
   },
   render: function(){

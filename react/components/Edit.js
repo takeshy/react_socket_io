@@ -1,14 +1,11 @@
 import React from 'react';
-import Router from 'react-router'; 
 import BlogsActionCreators from '../actions/BlogsActionCreators';
 import BlogsStore from '../stores/Blogs';
-var Link = Router.Link;
+import { Link } from 'react-router'
+
 var Edit = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.func
-  },
   getInitialState() {
-    var blogId = this.context.router.getCurrentParams().blogId;
+    var blogId = this.props.params.blogId;
     var blog = BlogsStore.find(blogId)
     return({id: blog.id,title: blog.title,content: blog.content});
   },
@@ -21,7 +18,7 @@ var Edit = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     BlogsActionCreators.updateBlog({id: document.getElementById("blog_id").value,title: document.getElementById("title").value,content: document.getElementById("content").value},()=>{
-      this.context.router.transitionTo('/');
+      this.props.history.pushState(null, '/', null);
     });
   },
   render(){

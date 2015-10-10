@@ -1,13 +1,9 @@
 import React from 'react';
-import Router from 'react-router'; 
 import BlogsStore from '../stores/Blogs';
-var Link = Router.Link;
+import { Link } from 'react-router'
 var Show = React.createClass({
-  contextTypes: {
-    router: React.PropTypes.func
-  },
   render(){
-    var blogId = this.context.router.getCurrentParams().blogId;
+    var blogId = this.props.params.blogId;
     var blog = BlogsStore.find(blogId);
     return (
       <div>

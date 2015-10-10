@@ -7,7 +7,7 @@ var buffer = require('vinyl-buffer')
 
 gulp.task('modules', function() {
   browserify({
-      entries: './index.js',
+      entries: './react/components/index.js',
       debug: false
   })
   .transform(babelify)

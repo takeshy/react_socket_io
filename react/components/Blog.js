@@ -1,6 +1,7 @@
 import React from 'react';
 import BlogsStore from '../stores/Blogs';
 import BlogHeader from './BlogHeader';
+import { Link } from 'react-router'
 class Blog extends React.Component {
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ class Blog extends React.Component {
         {this.state.blogs.map(blog => <BlogHeader key={blog.id} blog={blog} />)}
         </tbody>
       </table>
-      <a href="#/new">New Post</a>
+      <Link to='/new'>New Post</Link>
       </div>
     );
   }
